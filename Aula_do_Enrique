@@ -1,0 +1,174 @@
+#include <iostream>
+#include <conio.h>
+#include <ctime>
+#include <cstdlib>
+using namespace std;
+
+struct no {
+	int info;
+	no *link;
+};
+
+no *inicializaPilha(no *L) {
+	return NULL;
+}
+
+void imprimePilha(no *L) {
+	no *P;
+	P = L;	
+	
+	cout << "Imprime PILHA: " << endl;	
+	while(P != NULL) {
+		cout << P->info << " ";	
+		P = P->link;
+	}
+
+}
+
+no *PUSH(no *L, int x) {
+	no *N;
+
+	N = new no;
+	N->info = x;
+
+    N->link = L;
+	
+	L = N;
+	return (L);
+}
+
+no *POP(no *L, int *n) {
+	no *AUX;
+
+	if (L != NULL) {
+		*n = L->info;
+		AUX = L;
+		L = L->link;
+		delete AUX;
+	}
+	else{
+		*n = 0;
+	}
+	return (L);
+}
+
+int contaElementos(no *L) {
+    int contador = 0;
+    no *P = L;
+    while (P != NULL) {
+        contador++;
+        P = P->link;
+    }
+    return contador;
+}
+
+string jogador1;
+string jogador2;
+
+void Jogadores(){
+
+    cout << "Digite o nome dos jogadores:" << endl;
+    cout << "Jogador 1:" << endl;
+    cin >> jogador1;
+    cout << "Jogador 2:" << endl;
+    cin >> jogador2;
+}
+
+void Regras(){
+        cout << "Regras do Truco:" << endl;
+        cout << "Ordem crescente de forca das cartas: " << endl;
+        cout << "4, 5, 6, 7, Q, J, K, A, 2, 3" << endl << endl;
+
+        cout << "Distribuicao de cartas: tres cartas para cada jogador" << endl;
+        cout << "Objetivo: fazer 12 pontos" << endl << endl;
+
+        cout << "Modo de jogar:" << endl;
+        cout << "Apos embaralhar, distribua 3 cartas para cada jogador no sentido horario," << endl;;
+        cout << "iniciando pelo jogador a sua esquerda." << endl << endl;
+
+        cout << "A seguir, inicia-se a primeira mao, formada por ate 3 rodadas e que estara valendo 1 ponto" << endl;
+        cout << "Nessa rodada, cada jogador deve jogar uma carta na mesa e a de maior valor ganha a rodada" << endl;
+        cout << "Quando algum dos jogadores vencer 2 rodadas, tera ganho os pontos da mao" << endl << endl;
+
+        cout << "A qualquer momento, a partir do inicio da rodada, os jogadores podem pedir truco," << endl;
+        cout << "e assim aumentar o valor da mao" << endl;
+        cout << "As maos sao feitas sucessivamente, ate que um dos jogadores chegue a 12 pontos" << endl << endl;
+}
+
+void Truco(){
+    cout << "Truco";
+}
+
+void Jogo(string jogador1, string jogador2) {
+    cout << "Distribuindo cartas" << endl;
+    no *pilha = inicializaPilha(pilha);
+    int carta;
+    int *mao;
+    bool cartasUsadas[11] = { false };
+    int contador = 0;
+    int mao1[3] = {0};
+    int mao2[3] = {0};
+    int escolha;
+
+    unsigned seed = time(NULL);
+    srand(seed);
+
+    while (contador < 10) {
+        do {
+            carta = 1 + rand() % 10;
+        } while (cartasUsadas[carta]);
+
+        pilha = PUSH(pilha, carta);
+        cartasUsadas[carta] = true;
+        contador++;
+    }
+
+    for(int i=0; i< 3; i++){
+        int valor;
+        pilha = POP(pilha, &valor);
+        mao1[i] = valor;
+        pilha = POP(pilha, &valor);
+        mao2[i] = valor;
+    }
+
+    cout << "Vez do jogador 1: " << endl;
+    cout << "mao jogador 1: " << endl;
+    for(int i=0; i<3; i++){
+        cout << mao1[i] << endl;
+    }
+    cout << "Qual acao tomar?" << endl;
+    cout << "1. jogar carta" << endl;
+    cout << "2. pedir truco" << endl;
+    cin >> escolha;
+    
+    if(escolha == 1){
+        int cartaJogada;
+        cout << "Qual carta jogar?" << endl;
+
+        for(int i = 0; i<3; i++){
+            cout << i+1 << " - " << mao1[i] << endl;
+        }
+        cin >> cartaJogada;
+
+        cout << "mao do jogador 1:" << endl;
+        for(int i=0; i<3; i++){
+            if(i == cartaJogada){
+                mao1[i] = NULL;
+            }
+        }
+
+        for(int i=0; i<3; i++){
+            cout << i+1 << " - " << mao1[i] << endl;
+        }
+    }else{
+        Truco();
+    }
+
+}
+
+int main(){
+    Regras();
+    Jogadores();
+    Jogo(jogador1, jogador2);
+    return 0;
+}
