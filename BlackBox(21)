@@ -1,0 +1,141 @@
+#include <iostream>
+#include <ctime>
+using namespace std;
+
+struct no {
+	int info;
+	no *link;
+};
+
+no *inicializaPilha(no *L) {
+	return NULL;
+}
+
+void imprimePilha(no *L) {
+	no *P;
+	P = L;	
+	
+	cout << "Imprime PILHA: " << endl;	
+	while(P != NULL) {
+		cout << P->info << " ";	
+		P = P->link;
+	}
+
+}
+
+no *PUSH(no *L, int x) {
+	no *N;
+
+	N = new no;
+	N->info = x;
+
+    N->link = L;
+	
+	L = N;
+	return (L);
+}
+
+no *POP(no *L, int *n) {
+	no *AUX;
+
+	if (L != NULL) {
+		*n = L->info;
+		AUX = L;
+		L = L->link;
+		delete AUX;
+	}
+	else{
+		*n = 0;
+	}
+	return (L);
+}
+
+int dealer[2] = {0};
+bool ganhou = false;
+no *pilha = inicializaPilha(pilha);
+
+void Comparar(int dealer[2], int pessoa, int i){
+    if(pessoa > dealer[0]){
+        cout << "Pessoa " <<  i << " ganhou!!!" << endl;
+        ganhou = true;
+    }else{
+        cout << "Pessoa " << i << " perdeu!!!" << endl;
+    }
+}
+
+void SomaCartas1(int pessoa1){
+    char SN;
+    int identificador = 1;
+
+    cout << "Cartas Pessoa 1: " << endl;
+    cout << "Cartas somadas: " << pessoa1 << endl;
+
+    cout << "Jogar? S/N" << endl;
+    cin >> SN;
+
+    if(SN == 'S' || SN == 's'){
+        Comparar(dealer, pessoa1, identificador);
+    }
+}
+
+void SomaCartas2(int pessoa2){
+    char SN;
+    int identificador = 2;
+    cout << "Cartas Pessoa 2: " << endl;
+    cout << "Cartas somadas: " << pessoa2 << endl;
+    cout << "Jogar? S/N" << endl;
+    cin >> SN;
+    if(SN == 'S' || SN == 's'){
+        Comparar(dealer, pessoa2, identificador);
+    }
+}
+
+void DealerJoga(int dealer[2]){
+    cout << "\nCarta do Dealer: " << dealer[0] << endl;
+    dealer[0] += dealer[1];
+}
+
+void distribuiCartas(){
+    int carta = 0;
+
+    unsigned seed = time(NULL);
+    srand(seed);
+
+    for(int i = 0; i < 6; i++){
+        carta = 1 + rand() % 10;
+        pilha = PUSH(pilha,carta);
+    }
+}
+
+void Jogo(){
+    int pessoa1 = 0;
+    int pessoa2 = 0;
+    int top = 0;
+
+    while(ganhou != true){ 
+        for(int i = 0; i < 2; i++){
+            pilha = POP(pilha, &top);
+            pessoa1 += top;
+            pilha = POP(pilha, &top);
+            pessoa2 += top;
+            pilha = POP(pilha, &top);
+            dealer[i] += top;
+        }
+
+        DealerJoga(dealer);
+        SomaCartas1(pessoa1);
+        SomaCartas1(pessoa2);
+        cout << "Soma das cartas do dealer: " << dealer[0] << endl;
+        pessoa1 = 0;
+        pessoa2 = 0;
+        for(int i = 0; i < 2 ; i++){
+            dealer[i] = 0;
+        }
+        distribuiCartas();
+    }
+}
+
+int main(){
+    distribuiCartas();
+    Jogo();
+}
