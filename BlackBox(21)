@@ -54,7 +54,7 @@ int dealer[2] = {0};
 bool ganhou = false;
 no *pilha = inicializaPilha(pilha);
 
-void Comparar(int dealer[2], int pessoa, int i){
+int Comparar(int dealer[2], int pessoa, int i){
     if(pessoa > dealer[0]){
         cout << "Pessoa " <<  i << " ganhou!!!" << endl;
         ganhou = true;
@@ -66,13 +66,10 @@ void Comparar(int dealer[2], int pessoa, int i){
 void SomaCartas1(int pessoa1){
     char SN;
     int identificador = 1;
-
     cout << "Cartas Pessoa 1: " << endl;
     cout << "Cartas somadas: " << pessoa1 << endl;
-
     cout << "Jogar? S/N" << endl;
     cin >> SN;
-
     if(SN == 'S' || SN == 's'){
         Comparar(dealer, pessoa1, identificador);
     }
@@ -121,10 +118,9 @@ void Jogo(){
             pilha = POP(pilha, &top);
             dealer[i] += top;
         }
-
         DealerJoga(dealer);
         SomaCartas1(pessoa1);
-        SomaCartas1(pessoa2);
+        SomaCartas2(pessoa2);
         cout << "Soma das cartas do dealer: " << dealer[0] << endl;
         pessoa1 = 0;
         pessoa2 = 0;
